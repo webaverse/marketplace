@@ -1,9 +1,10 @@
 import Navbar from "../components/Navbar";
 import NFTTile from "../components/NFTTitle";
-import { useLocation, useParams } from "react-router-dom";
-import { contractAddress, contractAbi } from "../utils/contractData";
+import { useLocation, useParams } from 'react-router-dom';
+import { contractAddress, contractAbi } from "../utils/MarketplaceContract.js";
 import axios from "axios";
 import { useState } from "react";
+import { providers, Contract, utils } from "ethers";
 
 export default function Profile() {
   const [data, updateData] = useState([]);
@@ -12,43 +13,41 @@ export default function Profile() {
   const [totalPrice, updateTotalPrice] = useState("0");
 
   async function getNFTData(tokenId) {
-    const ethers = require("ethers");
     let sumPrice = 0;
     //After adding your Hardhat network to your metamask, this code will get providers and signers
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = new providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const addr = await signer.getAddress();
 
     //Pull the deployed contract instance
-    let contract = new ethers.Contract(contractAddress, contractAbi, signer);
+    let contract = new Contract(contractAddress, contractAbi, signer);
 
     //create an NFT Token
     let transaction = await contract.getMyNFTs();
 
     /*
-     * Below function takes the metadata from tokenURI and the data returned by getMyNFTs() contract function
-     * and creates an object of information that is to be displayed
-     */
-    const items = await Promise.all(
-      transaction.map(async (i) => {
-        const tokenURI = await contract.tokenURI(i.tokenId);
-        let meta = await axios.get(tokenURI);
-        meta = meta.data;
+    * Below function takes the metadata from tokenURI and the data returned by getMyNFTs() contract function
+    * and creates an object of information that is to be displayed
+    */
 
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.image,
-          name: meta.name,
-          description: meta.description,
-        };
-        sumPrice += Number(price);
-        return item;
-      })
-    );
+    const items = await Promise.all(transaction.map(async i => {
+      const tokenURI = await contract.tokenURI(i.tokenId);
+      let meta = await axios.get(tokenURI);
+      meta = meta.data;
+
+      let price = utils.formatUnits(i.price.toString(), 'ether');
+      let item = {
+        price,
+        tokenId: i.tokenId.toNumber(),
+        seller: i.seller,
+        owner: i.owner,
+        image: meta.image,
+        name: meta.name,
+        description: meta.description,
+      };
+      sumPrice += Number(price);
+      return item;
+    }));
 
     updateData(items);
     updateFetched(true);
@@ -58,12 +57,13 @@ export default function Profile() {
 
   const params = useParams();
   const tokenId = params.tokenId;
-  if (!dataFetched) getNFTData(tokenId);
+  if (!dataFetched)
+    getNFTData(tokenId);
 
   return (
-    <div className="profileClass" style={{ "min-height": "100vh" }}>
+    <div className="profileClass custom-bg">
       <Navbar></Navbar>
-      <div className="profileClass">
+      <div className="profileClass dark-bg">
         <div className="flex text-center flex-col mt-11 md:text-2xl text-white">
           <div className="mb-5">
             <h2 className="font-bold">Wallet Address</h2>
@@ -88,12 +88,10 @@ export default function Profile() {
             })}
           </div>
           <div className="mt-10 text-xl">
-            {data.length == 0
-              ? "Oops, No NFT data to display (Are you logged in?)"
-              : ""}
+            {data.length == 0 ? "Oops, No NFT data to display (Are you logged in?)" : ""}
           </div>
         </div>
       </div>
     </div>
   );
-}
+};

@@ -2,6 +2,7 @@ import fullLogo from "../img/full_logo.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import {ethers} from "ethers"
 
 function Navbar() {
   const [connected, toggleConnect] = useState(false);
@@ -9,7 +10,7 @@ function Navbar() {
   const [currAddress, updateAddress] = useState("0x");
 
   const getAddress = async () => {
-    const ethers = require("ethers");
+    // const ethers = require("ethers");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const addr = await signer.getAddress();
@@ -18,7 +19,7 @@ function Navbar() {
 
   const updateButton = () => {
     const ethereumButton = document.querySelector(".enableEthereumButton");
-    // ethereumButton.textContent = "Connected";
+    ethereumButton.textContent = "Connected";
     ethereumButton.classList.remove("hover:bg-blue-70");
     ethereumButton.classList.remove("bg-blue-500");
     ethereumButton.classList.add("hover:bg-green-70");
@@ -49,7 +50,7 @@ function Navbar() {
   useEffect(() => {
     const val = window.ethereum.isConnected();
     if (val) {
-      console.log("here");
+      console.log("connecting wallet");
       getAddress();
       toggleConnect(val);
       updateButton();

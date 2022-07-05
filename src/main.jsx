@@ -1,12 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SellNFT from "./routes/SellNFT";
-import Marketplace from "./routes/Marketplace";
-import Profile from "./routes/Profile";
-import NFTPage from "./routes/NFTpage";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './main.css';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import SellNFT from './routes/SellNFT';
+import Marketplace from './routes/Marketplace';
+import Profile from './routes/Profile';
+import NFTPage from './routes/NFTpage';
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -19,3 +24,4 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
+

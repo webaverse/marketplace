@@ -1,9 +1,11 @@
-require('dotenv').config();
-const key = process.env.REACT_APP_PINATA_API_KEY;
-const secret = process.env.REACT_APP_PINATA_API_SECRET;
+// require("dotenv").config();
+import axios from "axios";
+import FormData from "form-data";
+const key = "2cca303b13b5ccb179a9";
+const secret = "d4a5555377bf6b31f600809fb527355ae32d92e8f763c527029891d421533ab7";
+// const axios = require('axios');
+// const FormData = require('form-data');
 
-const axios = require('axios');
-const FormData = require('form-data');
 
 export const uploadJSONToIPFS = async (JSONBody) => {
   const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
@@ -15,19 +17,18 @@ export const uploadJSONToIPFS = async (JSONBody) => {
         pinata_secret_api_key: secret,
       }
     })
-    .then(function (response) {
+    .then((response) => {
       return {
         success: true,
         pinataURL: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
       };
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log(error);
       return {
         success: false,
         message: error.message,
       };
-
     });
 };
 

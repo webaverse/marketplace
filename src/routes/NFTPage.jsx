@@ -1,190 +1,104 @@
 import Navbar from "../components/Navbar";
+import { useLocation, useParams } from 'react-router-dom';
+import { contractAddress, contractAbi } from "../utils/MarketplaceContract.js";
+import axios from "axios";
+import { providers, Contract, utils } from "ethers";
 import { useState } from "react";
-import { uploadFileToIPFS, uploadJSONToIPFS } from "../utils/pinataFuncs";
-import { contractAddress, contractAbi } from "../utils/contractData";
-import { useLocation } from "react-router";
 
-export default function SellNFT() {
-  const [formParams, updateFormParams] = useState({
-    name: "",
-    description: "",
-    price: "",
-  });
-  const [fileURL, setFileURL] = useState(null);
-  const ethers = require("ethers");
-  const [message, updateMessage] = useState("");
-  const location = useLocation();
+export default function NFTPage(props) {
 
-  /**@dev uploads the NFT image to IPFS*/
-  const OnChangeFile = async (e) => {
-    console.log("New file detected!");
-    const file = e.target.files[0];
-    //check for file extension
-    // const str = file.name;
-    // if (!(str.endsWith(".png") ||
-    //   str.endsWith(".jpg") ||
-    //   str.endsWith(".webp") ||
-    //   str.endsWith(".jpeg") ||
-    //   str.endsWith(".gif"))) {
-    //   console.log("Unsupported Format");
-    //   return;
-    // }
-    try {
-      //upload the file to IPFS
-      const response = await uploadFileToIPFS(file);
-      if (response.success === true) {
-        console.log("Image uploaded to Pinata: ", response.pinataURL);
-        setFileURL(response.pinataURL);
-      }
-    } catch (e) {
-      console.log("Error during file upload", e);
+    const [data, updateData] = useState({});
+    const [dataFetched, updateDataFetched] = useState(false);
+    const [message, updateMessage] = useState("");
+    const [currAddress, updateCurrAddress] = useState("0x");
+
+    async function getNFTData(tokenId) {
+        const provider = new providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const addr = await signer.getAddress();
+        //Pull the deployed contract instance
+        let contract = new Contract(contractAddress, contractAbi, signer);
+        //create an NFT Token
+        const tokenURI = await contract.tokenURI(tokenId);
+        const listedToken = await contract.getListedTokenForId(tokenId);
+        let meta = await axios.get(tokenURI);
+        meta = meta.data;
+        console.log(listedToken);
+
+        let item = {
+            price: meta.price,
+            tokenId: tokenId,
+            seller: listedToken.seller,
+            owner: listedToken.owner,
+            image: meta.image,
+            name: meta.name,
+            description: meta.description,
+        };
+        console.log(item);
+        updateData(item);
+        updateDataFetched(true);
+        console.log("address", addr);
+        updateCurrAddress(addr);
     }
-  };
 
-  /**@dev uploads the the metadata to IPFS*/
-  const uploadMetadataToIPFS = async () => {
-    const { name, description, price } = formParams;
-    //Make sure that none of the fields are empty
-    if (!(name || description || price || fileURL)) return;
+    async function buyNFT(tokenId) {
+        try {
+            //After adding your Hardhat network to your metamask, this code will get providers and signers
+            const provider = new providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
 
-    const nftJSON = {
-      name: name,
-      description: description,
-      price: price,
-      image: fileURL,
-    };
+            //Pull the deployed contract instance
+            let contract = new Contract(contractAddress, contractAbi, signer);
+            const salePrice = utils.parseUnits(data.price, 'ether');
+            updateMessage("Buying the NFT... Please Wait (Upto 5 mins)");
+            //run the executeSale function
+            let transaction = await contract.executeSale(tokenId, { value: salePrice });
+            await transaction.wait();
 
-    try {
-      //upload the metadata JSON to IPFS
-      const response = await uploadJSONToIPFS(nftJSON);
-      if (response.success === true) {
-        console.log("Uploaded JSON to Pinata: ", response);
-        return response.pinataURL;
-      }
-    } catch (e) {
-      console.log("error uploading JSON metadata:", e);
+            alert('You successfully bought the NFT!');
+            updateMessage("");
+        }
+        catch (e) {
+            alert("Upload Error" + e);
+        }
     }
-  };
 
-  /**@dev Upload the NFT's metadata to the contract storage */
-  const listNFT = async (e) => {
-    e.preventDefault();
+    const params = useParams();
+    const tokenId = params.tokenId;
+    if (!dataFetched)
+        getNFTData(tokenId);
 
-    //Upload data to IPFS
-    try {
-      const metadataURL = await uploadMetadataToIPFS();
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      updateMessage("Please wait.. uploading (up to 5 mins)");
+    return (
+        <div className="custom-bg">
+            <Navbar></Navbar>
+            <div className="flex ml-20 mt-20">
+                <img src={data.image} alt="" className="w-2/5" />
+                <div className="text-xl ml-20 space-y-8 text-white shadow-2xl rounded-lg border-2 p-5">
+                    <div>
+                        Name: {data.name}
+                    </div>
+                    <div>
+                        Description: {data.description}
+                    </div>
+                    <div>
+                        Price: <span className="">{data.price + " ETH"}</span>
+                    </div>
+                    <div>
+                        Owner: <span className="text-sm">{data.owner}</span>
+                    </div>
+                    <div>
+                        Seller: <span className="text-sm">{data.seller}</span>
+                    </div>
+                    <div>
+                        {currAddress == data.owner || currAddress == data.seller ?
+                            <button className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm" onClick={() => buyNFT(tokenId)}>Buy this NFT</button>
+                            : <div className="text-emerald-700">You are the owner of this NFT</div>
+                        }
 
-      //Pull the deployed contract instance
-      let contract = new ethers.Contract(contractAddress, contractAbi, signer);
-
-      //massage the params to be sent to the create NFT request
-      const price = ethers.utils.parseUnits(formParams.price, "ether");
-      let listingPrice = await contract.getListPrice();
-      listingPrice = listingPrice.toString();
-
-      //create the NFT on-chain
-      let transaction = await contract.createToken(metadataURL, price, {
-        value: listingPrice,
-      });
-      await transaction.wait();
-
-      alert("Successfully listed your NFT!");
-      updateMessage("");
-      updateFormParams({ name: "", description: "", price: "" });
-      //? sends user to the main page
-      window.location.replace("/");
-    } catch (err) {
-      console.log("Error T.T", err);
-      alert("Upload error");
-    }
-  };
-
-  return (
-    <div className="">
-      <Navbar></Navbar>
-      <div className="flex flex-col place-items-center mt-10" id="nftForm">
-        <form className="bg-white shadow-md rounded px-8 pt-4 pb-8 mb-4">
-          <h3 className="text-center font-bold text-purple-500 mb-8">
-            Upload your NFT to the marketplace
-          </h3>
-          <div className="mb-4">
-            <label
-              className="block text-purple-500 text-sm font-bold mb-2"
-              htmlFor="name"
-            >
-              NFT Name
-            </label>
-            <input
-              onChange={(e) =>
-                updateFormParams({ ...formParams, name: e.target.value })
-              }
-              value={formParams.name}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="name"
-              type="text"
-              placeholder="Axie#4563"
-            ></input>
-          </div>
-          <div className="mb-6">
-            <label
-              className="block text-purple-500 text-sm font-bold mb-2"
-              htmlFor="description"
-            >
-              NFT Description
-            </label>
-            <textarea
-              onChange={(e) =>
-                updateFormParams({ ...formParams, description: e.target.value })
-              }
-              value={formParams.description}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              cols="40"
-              rows="5"
-              id="description"
-              type="text"
-              placeholder="Axie Infinity Collection"
-            ></textarea>
-          </div>
-          <div className="mb-6">
-            <label
-              className="block text-purple-500 text-sm font-bold mb-2"
-              htmlFor="price"
-            >
-              Price (in ETH)
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="number"
-              placeholder="Min 0.01 ETH"
-              step="0.01"
-              value={formParams.price}
-              onChange={(e) =>
-                updateFormParams({ ...formParams, price: e.target.value })
-              }
-            ></input>
-          </div>
-          <div>
-            <label
-              className="block text-purple-500 text-sm font-bold mb-2"
-              htmlFor="image"
-            >
-              Upload Image
-            </label>
-            <input type={"file"} onChange={(e) => OnChangeFile(e)}></input>
-          </div>
-          <br></br>
-          <div className="text-green text-center">{message}</div>
-          <button
-            onClick={listNFT}
-            className="font-bold mt-10 w-full bg-purple-500 text-white rounded p-2 shadow-lg"
-          >
-            List NFT
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+                        <div className="text-green text-center mt-3">{message}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
