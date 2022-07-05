@@ -9,7 +9,7 @@ import {
 import SellNFT from './routes/SellNFT';
 import Marketplace from './routes/Marketplace';
 import Profile from './routes/Profile';
-import NFTPage from './routes/NFTpage';
+import NFTPage from './routes/NFTPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
