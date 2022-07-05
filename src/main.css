@@ -25,3 +25,7 @@
   border-radius: 13px;
   padding: 7px;
 }
+
+body {
+  overflow-x: hidden;
+}

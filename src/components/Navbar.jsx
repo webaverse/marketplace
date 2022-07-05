@@ -73,7 +73,7 @@ function Navbar() {
                 alt=""
                 width={120}
                 height={120}
-                className="inline-block -mt-2"
+                className="inline-block mt-2"
               />
               <div className="inline-block font-bold text-xl ml-2">
                 NFT Marketplace
