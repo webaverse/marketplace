@@ -1,0 +1,25 @@
+.card-wrap {
+    display:block;
+    width: 300px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    background-color: #222;
+}
+
+.card-wrap .token-image-wrap {
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(0,0,0,0.2);
+}
+
+.card-wrap .token-image-wrap img {
+    width: 100%;
+}
+
+.card-wrap .token-name {
+   color: #EFEFEF;
+   text-align: left;
+   padding: 8px 12px;
+}

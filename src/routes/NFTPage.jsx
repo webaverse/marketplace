@@ -1,9 +1,13 @@
-import Navbar from "../components/Navbar";
 import { useLocation, useParams } from 'react-router-dom';
 import { contractAddress, contractAbi } from "../utils/MarketplaceContract.js";
 import axios from "axios";
 import { providers, Contract, utils } from "ethers";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import bg from '../assets/images/item-bg.png';
+import table from '../assets/images/item-table.png';
+import podium from '../assets/images/item-podium.png';
+import item from '../assets/images/item-view-1.png';
+import { tokenApiService } from '../utils/tokens-api-util.js';
 
 export default function NFTPage(props) {
 
@@ -11,6 +15,10 @@ export default function NFTPage(props) {
     const [dataFetched, updateDataFetched] = useState(false);
     const [message, updateMessage] = useState("");
     const [currAddress, updateCurrAddress] = useState("0x");
+
+    const tableRef = useRef();
+    const podiumRef = useRef();
+    const itemRef = useRef();
 
     async function getNFTData(tokenId) {
         const provider = new providers.Web3Provider(window.ethereum);
@@ -68,37 +76,35 @@ export default function NFTPage(props) {
     if (!dataFetched)
         getNFTData(tokenId);
 
-    return (
-        <div className="custom-bg">
-            <Navbar></Navbar>
-            <div className="flex ml-20 mt-20">
-                <img src={data.image} alt="" className="w-2/5" />
-                <div className="text-xl ml-20 space-y-8 text-white shadow-2xl rounded-lg border-2 p-5">
-                    <div>
-                        Name: {data.name}
-                    </div>
-                    <div>
-                        Description: {data.description}
-                    </div>
-                    <div>
-                        Price: <span className="">{data.price + " ETH"}</span>
-                    </div>
-                    <div>
-                        Owner: <span className="text-sm">{data.owner}</span>
-                    </div>
-                    <div>
-                        Seller: <span className="text-sm">{data.seller}</span>
-                    </div>
-                    <div>
-                        {currAddress == data.owner || currAddress == data.seller ?
-                            <button className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm" onClick={() => buyNFT(tokenId)}>Buy this NFT</button>
-                            : <div className="text-emerald-700">You are the owner of this NFT</div>
-                        }
+        useEffect(() => {
+            setTimeout(() => {
+                tableRef.current.style.opacity = 1;
+                tableRef.current.style.top = "80px";
+                podiumRef.current.style.opacity = 1;
+                podiumRef.current.style.width = "52%";
+            }, 600);
+        }, [dataFetched, table, podium]);
 
-                        <div className="text-green text-center mt-3">{message}</div>
-                    </div>
-                </div>
-            </div>
+        useEffect(() => {
+            setTimeout(() => {
+                itemRef.current.style.top = "60px";
+                podiumRef.current.style.filter = "grayscale(0)";
+            }, 1600);
+        }, [item]);
+        console.log(window.location)
+        const id = window.location.pathname;
+    useEffect(() => {
+        tokenApiService.fetchToken(id.replace("/asset/","")).then((res) => {
+            updateDataFetched(res);
+            console.log(res)
+        })
+    }, [])
+
+
+    return (
+        <div className="image-background" style={{ color: "#FFF", maxWidth: "800px", margin: "100px auto"}}>
+            <h1 style={{fontSize: "24px"}}>{dataFetched.name}</h1>
+            <h1 style={{fontSize: "24px"}}>{dataFetched.description}</h1>
         </div>
     );
 }

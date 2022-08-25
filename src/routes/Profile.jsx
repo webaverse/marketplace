@@ -1,5 +1,3 @@
-import Navbar from "../components/Navbar";
-import NFTTile from "../components/NFTTitle";
 import { useLocation, useParams } from 'react-router-dom';
 import { contractAddress, contractAbi } from "../utils/MarketplaceContract.js";
 import axios from "axios";
@@ -62,7 +60,6 @@ export default function Profile() {
 
   return (
     <div className="profileClass custom-bg">
-      <Navbar></Navbar>
       <div className="profileClass dark-bg">
         <div className="flex text-center flex-col mt-11 md:text-2xl text-white">
           <div className="mb-5">
@@ -84,7 +81,7 @@ export default function Profile() {
           <h2 className="font-bold">Your NFTs</h2>
           <div className="flex justify-center flex-wrap max-w-screen-xl">
             {data.map((value, index) => {
-              return <NFTTile data={value} key={index}></NFTTile>;
+              //return <NFTTile data={value} key={index}></NFTTile>;
             })}
           </div>
           <div className="mt-10 text-xl">

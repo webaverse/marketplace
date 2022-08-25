@@ -1,9 +1,9 @@
-import Navbar from "../components/Navbar";
-import NFTTile from "../components/NFTTitle";
 import { contractAddress, contractAbi } from "../utils/MarketplaceContract";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { providers, Contract, utils } from "ethers";
+import { tokenApiService } from "../utils/tokens-api-util";
+import TokenCard from "../components/TokenListItem";
 
 export default function Marketplace() {
   const sampleData = [
@@ -55,16 +55,22 @@ export default function Marketplace() {
     //? Just a bool to avoid the function being called infinitetly
     getAllNFTs();
 
+  useEffect(() => {
+    tokenApiService.fetchTokens(0,12).then((res) => {
+      setData(res);
+      console.log(res)
+    })
+  }, [])
+
   return (
     <div className="custom-bg">
-      <Navbar></Navbar>
       <div className="flex flex-col place-items-center mt-20">
         <div className="md:text-xl font-bold text-white">
           Top NFTs
         </div>
         <div className="flex mt-5 justify-between flex-wrap max-w-screen-xl text-center">
           {data.map((value, index) => {
-            return <NFTTile data={value} key={index}></NFTTile>;
+            return <TokenCard data={value} key={index} />;
           })}
         </div>
       </div>

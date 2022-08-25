@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-import {ethers} from "ethers"
+import {ethers} from "ethers";
+import './style.css';
 
 function Navbar() {
   const [connected, toggleConnect] = useState(false);
@@ -62,7 +63,7 @@ function Navbar() {
   });
 
   return (
-    <div className="">
+    <div className="navigation-wrap">
       <nav className="w-screen">
         <ul className="flex items-end justify-between py-3 bg-transparent text-white pr-5">
           <li className="flex items-end ml-5 pb-2">
