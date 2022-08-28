@@ -1,0 +1,7 @@
+.wv-icon * {
+    fill: #84FFFF !important;
+}
+
+.wv-icon:hover * {
+    fill: #FFFFFF !important;
+}

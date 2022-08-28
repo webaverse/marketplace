@@ -6,18 +6,8 @@ import { tokenApiService } from "../utils/tokens-api-util";
 import TokenCard from "../components/TokenListItem";
 
 export default function Marketplace() {
-  const sampleData = [
-    {
-      "name": "NFT#1",
-      "description": "Alchemy's First NFT",
-      "website": "http://axieinfinity.io",
-      "image": "https://gateway.pinata.cloud/ipfs/QmTsRJX7r5gyubjkdmzFrKQhHv74p5wT9LdeF1m3RTqrE5",
-      "price": "0.03ETH",
-      "currentlySelling": "True",
-      "address": "0xe81Bf5A757CB4f7F82a2F23b1e59bE45c33c5b13",
-    },
-  ];
-  const [data, setData] = useState(sampleData);
+  
+  const [data, setData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
 
   async function getAllNFTs() {
@@ -65,7 +55,7 @@ export default function Marketplace() {
   return (
     <div className="custom-bg">
       <div className="flex flex-col place-items-center mt-20">
-        <div className="md:text-xl font-bold text-white">
+        <div className="md:text-xl font-bold text-white" style={{fontFamily: "WinchesterCapsRegular"}}>
           Top NFTs
         </div>
         <div className="flex mt-5 justify-between flex-wrap max-w-screen-xl text-center">

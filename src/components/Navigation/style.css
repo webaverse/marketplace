@@ -4,6 +4,39 @@
     left: 0;
     z-index: 100;
     width: 100vw;
-    height: 60px;
+    height: 80px;
     background-color: #161616;
+}
+
+.navigation-wrap .inner-wrap {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    height: 80px;
+    position: relative;
+}
+
+.navigation-wrap .inner-wrap .logo {
+    left: 0;
+}
+
+.navigation-wrap .user-navigation {
+    margin: 0;
+    padding: 0;
+    display: block;
+    right: 0;
+    color: #EFEFEF;
+}
+
+.navigation-wrap .user-navigation li {
+    margin: 0;
+    padding: 0;
+    display: block;
+    float: left;
+    margin-left: 8px;
+}
+
+.navigation-wrap .user-navigation li button {
+    line-height: 80px;
+    height: 80px;
 }

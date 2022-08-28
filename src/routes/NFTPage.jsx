@@ -75,7 +75,7 @@ export default function NFTPage(props) {
     const tokenId = params.tokenId;
     if (!dataFetched)
         getNFTData(tokenId);
-
+        /*
         useEffect(() => {
             setTimeout(() => {
                 tableRef.current.style.opacity = 1;
@@ -91,8 +91,10 @@ export default function NFTPage(props) {
                 podiumRef.current.style.filter = "grayscale(0)";
             }, 1600);
         }, [item]);
+        */
         console.log(window.location)
         const id = window.location.pathname;
+       
     useEffect(() => {
         tokenApiService.fetchToken(id.replace("/asset/","")).then((res) => {
             updateDataFetched(res);
