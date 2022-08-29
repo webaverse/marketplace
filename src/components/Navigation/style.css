@@ -10,21 +10,21 @@
 
 .navigation-wrap .inner-wrap {
     width: 100%;
-    max-width: 1200px;
+    box-sizing: border-box;
     margin: auto;
     height: 80px;
     position: relative;
 }
 
 .navigation-wrap .inner-wrap .logo {
-    left: 0;
+    left: 24px;
 }
 
 .navigation-wrap .user-navigation {
     margin: 0;
     padding: 0;
     display: block;
-    right: 0;
+    right: 24px;
     color: #EFEFEF;
 }
 

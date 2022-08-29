@@ -5,6 +5,12 @@
 /* FONT NAME "WinchesterCapsRegular" */
 @import url('./assets/fonts/WinchesterCaps/style.css');
 
+.main-content-wrap {
+  box-sizing: border-box;
+  padding-top: 80px;
+  color: #EFEFEF;
+}
+
 .custom-bg {
   min-height: 100vh;
 }
@@ -42,7 +48,6 @@
 .item {
   width: 100px;
   top: -300px;
-  z-index: 10;
 }
 
 .transition-1s {
@@ -51,6 +56,13 @@
   -o-transition: all 1s ease;
   -ms-transition: all 1s ease;
   transition: all 1s ease;
+}
+.transition-03s {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .vh-centered {
@@ -85,6 +97,6 @@
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: hidden !important;
   background: #191919;
 }

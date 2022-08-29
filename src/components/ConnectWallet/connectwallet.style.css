@@ -1,0 +1,29 @@
+.wallet-list-wrap {
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+    padding: 24px;
+    margin: 8px;
+    margin: auto;
+    color: #FFFFFF;
+}
+
+.wallet-list-wrap h1 {
+    font-size: 26px;
+}
+
+.wallet-list-wrap ul {
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    margin-top: 16px;
+    overflow: hidden;
+}
+
+.wallet-list-wrap ul li {
+    cursor: pointer;
+    padding: 16px;
+}
+
+.wallet-list-wrap ul li:hover {
+    background-color: rgba(255,255,255,0.2) !important;
+}

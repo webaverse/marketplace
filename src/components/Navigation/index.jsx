@@ -5,6 +5,7 @@ import WvIcon from "../../assets/icons";
 import { ethers } from "ethers";
 import { useAuth } from '../../contexts/AuthContext';
 import "./style.css";
+import { useGlobalState } from "../../contexts/GlobalContext";
 
 function Navbar() {
   const [connected, toggleConnect] = useState(false);
@@ -12,6 +13,11 @@ function Navbar() {
   const [currAddress, updateAddress] = useState("0x");
 
   const { connectWallet } = useAuth();
+  const { setWalletSidebarOpen, walletSidebarOpen } = useGlobalState();
+
+  const toggleWalletSidebar = () => {
+    setWalletSidebarOpen(walletSidebarOpen ? false : true);
+  }
 
   return (
     <div className="navigation-wrap">
@@ -21,20 +27,8 @@ function Navbar() {
         </Link>
         <ul className="user-navigation v-centered">
           <li>
-            <button onClick={connectWallet}>
-              {connected ? "Connected" : "Connect Wallet"}
-            </button>
-          </li>
-          <li>
             <button>
               <WvIcon icon="iconSearch" size={26} />
-            </button>
-          </li>
-          <li>
-            <button onClick={connectWallet}>
-            <Link to="/profile">
-              <WvIcon icon="iconWallet" size={36} />
-              </Link>
             </button>
           </li>
           <li>
@@ -42,6 +36,11 @@ function Navbar() {
             <Link to="/profile">
               <WvIcon icon="iconUser" size={30} />
               </Link>
+            </button>
+          </li>
+          <li>
+            <button onClick={() => toggleWalletSidebar()}>
+              <WvIcon icon="iconWallet" size={36} />
             </button>
           </li>
         </ul>
