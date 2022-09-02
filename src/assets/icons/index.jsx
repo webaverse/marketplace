@@ -18,11 +18,12 @@ async function getSVG(iconName) {
 }
 
 export default function WvIcon(props) {
-  const { size, color, icon } = props;
+  const { size, color, icon, className } = props;
   const svgRef = useRef(null);
   useEffect(() => {
     if (icon) {
       getSVG(icon).then((res) => {
+        svgRef.current.innerHTML = "";
         if (res) {
           res.style.height = size;
           res.style.width = "auto";
@@ -40,5 +41,5 @@ export default function WvIcon(props) {
     }
   }, []);
 
-  return <span ref={svgRef}></span>;
+  return <span ref={svgRef} className={className}></span>;
 }

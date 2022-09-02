@@ -25,11 +25,36 @@ function Navbar() {
         <Link to={"/"} className="logo v-centered">
           <WvIcon icon="logoHorizontal" size={50} />
         </Link>
+        
+        <div className="v-centered search-wrap">
+        <WvIcon icon="iconSearch" size={26} className="icon v-centered" />
+        <input type={"text"} placeholder="Search items, accounts" />
+        </div>
+
         <ul className="user-navigation v-centered">
+        <li>
+            <button>
+              Explore
+            </button>
+          </li>
+          <li>
+            |
+          </li>
           <li>
             <button>
-              <WvIcon icon="iconSearch" size={26} />
+              Sell
             </button>
+          </li>
+          <li>
+            |
+          </li>
+          <li>
+            <button>
+              Resources
+            </button>
+          </li>
+          <li>
+            |
           </li>
           <li>
             <button>

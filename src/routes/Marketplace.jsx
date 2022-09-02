@@ -46,7 +46,7 @@ export default function Marketplace() {
     getAllNFTs();
 
   useEffect(() => {
-    tokenApiService.fetchTokens(0,12).then((res) => {
+    tokenApiService.fetchTokens(0,9).then((res) => {
       setData(res);
       console.log(res)
     })
