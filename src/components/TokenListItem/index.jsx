@@ -18,6 +18,10 @@ function TokenCard(data) {
         <div className="token-name">
             {data.data.name}
         </div>
+        <div className="author">
+          <div className="avatar" />
+          <div className="owner">@owner.username</div>
+        </div>
       </div>
     </Link>
   );

@@ -28,7 +28,7 @@
     color: #EFEFEF;
 }
 
-.navigation-wrap .user-navigation li {
+.navigation-wrap .user-navigation > li {
     margin: 0;
     padding: 0;
     display: block;
@@ -36,9 +36,10 @@
     margin-left: 12px;
     line-height: 80px;
     color: #444444;
+    position: relative;
 }
 
-.navigation-wrap .user-navigation li button {
+.navigation-wrap .user-navigation > li button {
     line-height: 80px;
     height: 80px;
     color: #efefef;
@@ -64,4 +65,20 @@
 
 .navigation-wrap .search-wrap .icon {
     left: 8px;
+}
+
+.navigation-wrap .dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding: 8px;
+    color: #EFEFEF;
+    background-color: #161616;
+    width: 240px;
+}
+
+.navigation-wrap .dropdown li {
+    display: block !important;
+    float: none;
+    line-height: 28px;
 }

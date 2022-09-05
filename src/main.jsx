@@ -12,6 +12,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import WalletSidebar from "./components/Sidebars/wallet";
 import ConnectWallet from "./components/ConnectWallet";
 import { GlobalProvider } from "./contexts/GlobalContext";
+import Store from "./routes/Store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -35,6 +36,11 @@ root.render(
                 exact
                 path="/profile"
                 element={<PrivateRoute component={Profile} />}
+              />
+              <Route
+                exact
+                path="/store/:profileId"
+                element={<PrivateRoute component={Store} />}
               />
             </Routes>
           </div>
