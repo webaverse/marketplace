@@ -19,6 +19,9 @@ function Navbar() {
     setWalletSidebarOpen(walletSidebarOpen ? false : true);
   }
 
+  const [resources, toggleResources] = useState(false);
+  const [profile, toggleProfile] = useState(false);
+
   return (
     <div className="navigation-wrap">
       <div className="inner-wrap">
@@ -49,19 +52,32 @@ function Navbar() {
             |
           </li>
           <li>
-            <button>
+            <button onClick={() => toggleResources(resources ? false : true)}>
               Resources
             </button>
+            {resources && (
+              <ul className="dropdown">
+                <li>Support</li>
+                <li>Partners</li>
+                <li>Newsletter</li>
+                <li>Social Pages</li>
+              </ul>
+            )}
           </li>
           <li>
             |
           </li>
           <li>
-            <button>
-            <Link to="/profile">
+            <button onClick={() => toggleProfile(profile ? false : true)}>
               <WvIcon icon="iconUser" size={30} />
-              </Link>
             </button>
+            {profile && (
+              <ul className="dropdown">
+                <li>Profile Settings</li>
+                <li>My Store</li>
+                <li>Sign Out</li>
+              </ul>
+            )}
           </li>
           <li>
             <button onClick={() => toggleWalletSidebar()}>
